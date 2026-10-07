@@ -1,0 +1,24 @@
+# HeroWallos - Schutz sensibler Dateien + HTTPS auf Apache (IONOS)
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # --- HTTPS erzwingen: http -> https ---
+    # Greift erst, wenn das SSL-Zertifikat bei IONOS aktiv ist.
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+    # --- Direkten Zugriff auf sensible Ordner verbieten ---
+    RewriteRule ^db/ - [F,L]
+    RewriteRule ^includes/ - [F,L]
+    RewriteRule ^migrations/ - [F,L]
+</IfModule>
+
+# .db / .sqlite-Dateien generell blockieren
+<FilesMatch "\.(db|sqlite|sqlite3)$">
+    Require all denied
+</FilesMatch>
+
+# Standard-Startseite
+DirectoryIndex index.php
