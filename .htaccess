@@ -1,0 +1,17 @@
+# HeroWallos - Schutz sensibler Dateien auf Apache (IONOS)
+
+# Direkten Zugriff auf die SQLite-Datenbank verbieten
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^db/ - [F,L]
+    RewriteRule ^includes/ - [F,L]
+    RewriteRule ^migrations/ - [F,L]
+</IfModule>
+
+# .db / .sqlite-Dateien generell blockieren
+<FilesMatch "\.(db|sqlite|sqlite3)$">
+    Require all denied
+</FilesMatch>
+
+# Standard-Startseite
+DirectoryIndex index.php
